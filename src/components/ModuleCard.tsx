@@ -1,23 +1,33 @@
 import { motion } from 'framer-motion'
 import { SecurityModule } from '@/lib/types'
-import { LucideIcon } from 'lucide-react'
+import { LucideIcon, Bug, Zap, Lock, Shield, Cpu } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 
 interface ModuleCardProps {
     module: SecurityModule
-    icon: LucideIcon
-    onClick: (module: SecurityModule) => void
+    icon?: LucideIcon
+    onClick?: (module: SecurityModule) => void
     index: number
 }
 
-export function ModuleCard({ module, icon: Icon, onClick, index }: ModuleCardProps) {
+// Helper function to get default icon based on module id
+function getDefaultIcon(id: string): LucideIcon {
+    if (id.includes('reentrancy')) return Zap
+    if (id.includes('access')) return Lock
+    if (id.includes('overflow')) return Cpu
+    if (id.includes('dos')) return Shield
+    return Bug
+}
+
+export function ModuleCard({ module, icon, onClick, index }: ModuleCardProps) {
+    const Icon = icon || getDefaultIcon(module.id)
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.1 }}
-            onClick={() => onClick(module)}
+            onClick={() => onClick?.(module)}
             className="group relative cursor-pointer"
         >
             <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 rounded-xl blur-xl transition-opacity opacity-0 group-hover:opacity-100" />

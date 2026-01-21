@@ -20,7 +20,16 @@ export const metadata: Metadata = {
   keywords: ["Solidity", "Smart Contract", "Security", "Ethereum", "Blockchain", "Vulnerability", "Web3", "Next.js", "TypeScript", "Educational"],
   authors: [{ name: "Mir Mohmmad Luqman", url: "https://github.com/mirmohmmadluqman" }],
   icons: {
-    icon: "/favicon.ico",
+    icon: [
+      { url: "/assets/favicon.ico" },
+      { url: "/assets/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/assets/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+    ],
+    apple: "/assets/apple-touch-icon.png",
+    other: [
+      { rel: "android-chrome-192x192", url: "/assets/android-chrome-192x192.png" },
+      { rel: "android-chrome-512x512", url: "/assets/android-chrome-512x512.png" },
+    ],
   },
   openGraph: {
     title: "Security Playground - Smart Contract Security Training",

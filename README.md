@@ -1,7 +1,7 @@
 # Security Playground
 
 <div align="center">
-  <img src="public/logo.svg" alt="Security Playground Logo" width="200"/>
+  <img src="public/logo.png" alt="Security Playground Logo" width="200"/>
   <p>An interactive, browser-based platform for learning Ethereum smart contract security through hands-on exploitation and fixing of real vulnerabilities.</p>
 </div>
 
@@ -42,7 +42,7 @@ Security Playground teaches developers about common smart contract vulnerabiliti
 ### Installation
 
 ```bash
-git clone https://github.com/mirmohmmadluqman/security-pg.git
+git clone https://github.com/mirmohmadluqman/security-pg.git
 cd security-pg
 npm install
 npm run dev

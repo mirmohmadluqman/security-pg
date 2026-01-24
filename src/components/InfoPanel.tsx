@@ -4,7 +4,8 @@ import { SecurityModule } from '@/lib/types'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { AlertTriangle, Shield, Zap, BookOpen, ExternalLink, Target, Info, CheckCircle2 } from 'lucide-react'
+import { AlertTriangle, Shield, Zap, BookOpen, ExternalLink, Target, Info, CheckCircle2, Image as ImageIcon } from 'lucide-react'
+import { ZoomableImage } from '@/components/ImageZoom'
 import { cn } from '@/lib/utils'
 
 interface InfoPanelProps {
@@ -40,7 +41,10 @@ export function InfoPanel({ module }: InfoPanelProps) {
       </div>
 
       <Tabs defaultValue="vulnerability" className="w-full">
-        <TabsList className="w-full grid grid-cols-4 h-auto bg-black/20 p-1 rounded-lg border border-white/5">
+        <TabsList className={cn(
+          "w-full grid h-auto bg-black/20 p-1 rounded-lg border border-white/5",
+          module.images && module.images.length > 0 ? "grid-cols-5" : "grid-cols-4"
+        )}>
           <TabsTrigger value="vulnerability" className="text-xs py-2 data-[state=active]:bg-primary/20 data-[state=active]:text-primary">
             <AlertTriangle className="w-3.5 h-3.5 mr-1.5" />
             Bug
@@ -53,6 +57,12 @@ export function InfoPanel({ module }: InfoPanelProps) {
             <Shield className="w-3.5 h-3.5 mr-1.5" />
             fix
           </TabsTrigger>
+          {module.images && module.images.length > 0 && (
+            <TabsTrigger value="evidence" className="text-xs py-2 data-[state=active]:bg-purple-500/20 data-[state=active]:text-purple-400">
+              <ImageIcon className="w-3.5 h-3.5 mr-1.5" />
+              Evidence
+            </TabsTrigger>
+          )}
           <TabsTrigger value="references" className="text-xs py-2 data-[state=active]:bg-blue-500/20 data-[state=active]:text-blue-400">
             <BookOpen className="w-3.5 h-3.5 mr-1.5" />
             Learn
@@ -121,6 +131,31 @@ export function InfoPanel({ module }: InfoPanelProps) {
               </CardContent>
             </Card>
           </TabsContent>
+
+          {module.images && module.images.length > 0 && (
+            <TabsContent value="evidence" className="m-0">
+              <Card className="glass-card">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm flex items-center gap-2 text-purple-400">
+                    <ImageIcon className="w-4 h-4" />
+                    Vulnerability Evidence
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid gap-4">
+                    {module.images.map((img, index) => (
+                      <ZoomableImage
+                        key={index}
+                        src={img}
+                        alt={`Evidence ${index + 1}`}
+                        className="w-full h-48 rounded-xl border border-white/5 overflow-hidden shadow-lg bg-white/5"
+                      />
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          )}
 
           <TabsContent value="references" className="m-0">
             <Card className="glass-card">

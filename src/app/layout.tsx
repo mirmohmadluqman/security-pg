@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/components/theme-provider";
+import { LegalGate } from "@/components/LegalGate";
+import { ImageZoomProvider } from "@/components/ImageZoom";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -62,8 +64,11 @@ export default function RootLayout({
           disableTransitionOnChange
           themes={["light", "dark", "cyberpunk", "minimalist", "glass", "neobrutalism", "enterprise"]}
         >
-          {children}
-          <Toaster />
+          <ImageZoomProvider>
+            {children}
+            <LegalGate />
+            <Toaster />
+          </ImageZoomProvider>
         </ThemeProvider>
       </body>
     </html>

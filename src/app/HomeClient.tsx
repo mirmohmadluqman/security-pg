@@ -39,7 +39,18 @@ export default function HomeClient() {
 
       <div className="max-w-7xl mx-auto px-6 py-8 relative z-10 flex-1">
         <header className="flex justify-between items-center mb-20">
-          <Logo />
+          <div className="flex items-center gap-8">
+            <Logo />
+            <nav className="hidden md:flex items-center gap-6">
+              <span className="text-sm font-medium text-primary">Home</span>
+              <Link href="/challenges" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
+                Challenges
+              </Link>
+              <Link href="/library" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
+                Library
+              </Link>
+            </nav>
+          </div>
           <ThemeSelector />
         </header>
 

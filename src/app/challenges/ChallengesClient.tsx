@@ -25,6 +25,12 @@ export default function ChallengesClient() {
                             </Button>
                         </Link>
                         <Logo />
+                        <nav className="hidden md:flex items-center gap-6 ml-8">
+                            <span className="text-sm font-medium text-primary">Challenges</span>
+                            <Link href="/library" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
+                                Library
+                            </Link>
+                        </nav>
                     </div>
                     <ThemeSelector />
                 </header>

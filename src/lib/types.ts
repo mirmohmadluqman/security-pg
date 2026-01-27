@@ -18,6 +18,35 @@ export interface SecurityModule {
   images?: string[]
 }
 
+export interface DVDChallenge {
+  id: string
+  title: string
+  subtitle: string
+  scenario: string
+  objective: string
+  rules: string[]
+  difficulty: 'intermediate' | 'advanced'
+  category: 'DeFi' | 'Governance' | 'Lending' | 'Flash Loans' | 'Oracles'
+  contracts: Array<{
+    name: string
+    code: string
+    path: string
+  }>
+  testCode: string
+  exploitHint?: string
+  remixUrl?: string
+}
+
+export interface DeFiVulnSample {
+  id: string
+  title: string
+  description: string
+  category: string
+  code: string
+  mitigation: string
+  sourceUrl: string
+}
+
 export interface VMState {
   logs: string[]
   isRunning: boolean

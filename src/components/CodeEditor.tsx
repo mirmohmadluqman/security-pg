@@ -51,6 +51,34 @@ export function CodeEditor({ code, language, isDarkMode, readOnly = false, onCha
       })
     }
 
+    // Custom Web3 Dark Theme
+    monaco.editor.defineTheme('web3-dark', {
+      base: 'vs-dark',
+      inherit: true,
+      rules: [
+        { token: 'keyword', foreground: 'a78bfa', fontStyle: 'bold' }, // Violet-400
+        { token: 'type', foreground: '22d3ee' }, // Cyan-400
+        { token: 'string', foreground: '4ade80' }, // Green-400
+        { token: 'number', foreground: 'f472b6' }, // Pink-400
+        { token: 'comment', foreground: '94a3b8', fontStyle: 'italic' }, // Slate-400
+        { token: 'variable.predefined', foreground: 'fbbf24' }, // Amber-400
+        { token: 'identifier', foreground: 'e2e8f0' }, // Slate-200
+        { token: 'delimiter', foreground: '94a3b8' }, // Slate-400
+      ],
+      colors: {
+        'editor.background': '#00000000', // Transparent to inherit glass/dark bg
+        'editor.foreground': '#e2e8f0',
+        'editor.lineHighlightBackground': '#ffffff0a',
+        'editorCursor.foreground': '#a78bfa',
+        'editorIndentGuide.background': '#ffffff1a',
+        'editor.selectionBackground': '#a78bfa33',
+        'scrollbarSlider.background': '#ffffff1a',
+        'scrollbarSlider.hoverBackground': '#ffffff33',
+        'scrollbarSlider.activeBackground': '#ffffff4d',
+        'widget.shadow': '#00000000',
+      }
+    })
+
     // Custom Web3 Light Theme
     monaco.editor.defineTheme('web3-light', {
       base: 'vs',
@@ -66,7 +94,7 @@ export function CodeEditor({ code, language, isDarkMode, readOnly = false, onCha
         { token: 'delimiter', foreground: '475569' }, // Slate-600
       ],
       colors: {
-        'editor.background': '#00000000', // Transparent
+        'editor.background': '#ffffff', // Explicit white for light mode
         'editor.foreground': '#0f172a',
         'editor.lineHighlightBackground': '#0000000a',
         'editorCursor.foreground': '#7c3aed',
@@ -107,7 +135,7 @@ export function CodeEditor({ code, language, isDarkMode, readOnly = false, onCha
         defaultLanguage="solidity"
         language="solidity"
         value={code}
-        theme="web3-dark"
+        theme={isDarkMode ? 'web3-dark' : 'web3-light'}
         onChange={(value) => onChange?.(value || '')}
         onMount={handleEditorDidMount}
         loading=""

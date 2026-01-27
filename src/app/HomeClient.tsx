@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { modules } from '@/lib/modules'
 import { ModuleCard } from '@/components/ModuleCard'
 import { Button } from '@/components/ui/button'
-import { Terminal, Shield, Zap, Bug, Lock, Cpu, BookOpen } from 'lucide-react'
+import { Terminal, Shield, Zap, Bug, Lock, Cpu, BookOpen, Star } from 'lucide-react'
 import { ThemeSelector } from '@/components/ThemeSelector'
 import { motion } from 'framer-motion'
 import { useTheme } from 'next-themes'
@@ -54,6 +54,9 @@ export default function HomeClient() {
               <Link href="/solidity" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
                 Solidity
               </Link>
+              <Link href="/dvd" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
+                Playground
+              </Link>
             </nav>
           </div>
           <ThemeSelector />
@@ -92,7 +95,7 @@ export default function HomeClient() {
             { icon: Terminal, title: "Real-World Exploits", desc: "Execute actual attack vectors in a sandboxed EVM." },
             { icon: Shield, title: "Interactive Defense", desc: "Patch vulnerabilities and verify fixes instantly." },
             { icon: Zap, title: "Instant Feedback", desc: "Real-time compilation and execution logs." },
-            { icon: BookOpen, title: "Solidity Lessons", desc: "129 hands-on lessons from basics to DeFi.", link: "/solidity" }
+            { icon: Star, title: "Damn Vulnerable DeFi", desc: "Exploit sophisticated protocols in our playground.", link: "/dvd" }
           ].map((feature, i) => {
             const CardContent = (
               <div className={`glass p-8 rounded-2xl flex flex-col items-center text-center hover:scale-105 transition-transform duration-300 h-full ${feature.link ? 'cursor-pointer' : ''}`}>

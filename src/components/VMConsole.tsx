@@ -32,11 +32,11 @@ export function VMConsole({ logs = [], isRunning }: VMConsoleProps) {
   }
 
   return (
-    <div className="flex flex-col h-full bg-black/5 font-mono text-sm border-t border-border">
-      <div className="flex items-center justify-between px-4 py-2 bg-accent/20 border-b border-border">
-        <div className="flex items-center gap-2 text-muted-foreground">
-          <Terminal className="w-4 h-4" />
-          <span className="text-xs font-bold tracking-wider">EVM_OUTPUT_STREAM</span>
+    <div className="flex flex-col h-full bg-transparent font-mono text-sm">
+      <div className="flex items-center justify-between px-4 py-2 bg-muted/20 border-b border-border/50">
+        <div className="flex items-center gap-2 text-muted-foreground/70">
+          <Terminal className="w-3.5 h-3.5" />
+          <span className="text-[10px] font-bold tracking-widest uppercase">EVM_OUTPUT_STREAM</span>
         </div>
         <div className="flex gap-1">
           <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground hover:text-foreground" onClick={copyLogs}>
